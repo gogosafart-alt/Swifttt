@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Timur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Layout: starfield hero with floating pill nav, big name, two link buttons; then About cards, Friends, Contact. */
+  :root {
+    --bg: #050608; --fg: #f3f3f1; --muted: #9a9ca3; --line: rgba(255,255,255,.12);
+    --glass: rgba(255,255,255,.045); --glass-hi: rgba(255,255,255,.09);
+    --font: "Manrope", system-ui, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font); line-height: 1.55; -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  :focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 12px; }
+  #stars { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; }
+
+  .nav { position: sticky; top: 14px; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; padding: 10px 12px 10px 18px; border: 1px solid var(--line); border-radius: 999px; background: rgba(8,9,11,.72); backdrop-filter: blur(14px); }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 18px; }
+  .brand svg { width: 34px; height: 34px; }
+  .links { display: flex; gap: 4px; }
+  .links a { padding: 8px 13px; border-radius: 999px; color: var(--muted); font-size: 14px; font-weight: 500; transition: .2s; }
+  .links a:hover { color: var(--fg); background: var(--glass); }
+  .right { display: flex; align-items: center; gap: 10px; }
+  .lang { display: flex; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: var(--glass); }
+  .lang button { border: 0; background: none; padding: 6px 12px; border-radius: 999px; font-size: 13px; color: var(--muted); }
+  .lang button[aria-pressed="true"] { background: var(--fg); color: #0a0a0a; font-weight: 600; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 28px; border-radius: 999px; font-weight: 600; font-size: 15px; border: 1px solid var(--line); background: var(--glass); transition: transform .2s, background .2s, box-shadow .2s; }
+  .btn:hover { transform: translateY(-2px); background: var(--glass-hi); }
+  .btn.solid { background: var(--fg); color: #0a0a0a; border-color: transparent; box-shadow: 0 8px 40px rgba(255,255,255,.14); }
+  .nav .btn { padding: 11px 22px; }
+
+  .hero { text-align: center; padding: 70px 0 40px; }
+  .emblem { width: 190px; height: 190px; margin: 0 auto; filter: drop-shadow(0 0 40px rgba(255,255,255,.18)); animation: float 6s ease-in-out infinite; }
+  @keyframes float { 50% { transform: translateY(-10px) rotate(-2deg); } }
+  .rule { width: 240px; height: 1px; margin: 26px auto 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent); }
+  h1 { margin: 34px 0 0; font-size: clamp(64px, 14vw, 156px); line-height: .95; letter-spacing: -.045em; font-weight: 800; }
+  .tag { margin: 12px auto 0; font-size: clamp(22px, 3.6vw, 40px); font-weight: 500; letter-spacing: -.02em; color: #d7d8dc; max-width: 22ch; text-wrap: balance; }
+  .lead { margin: 22px auto 0; max-width: 54ch; color: var(--muted); font-size: 16.5px; text-wrap: pretty; }
+  .cta { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+
+  section { padding-top: 110px; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); text-align: center; }
+  h2 { margin: 12px auto 0; text-align: center; font-size: clamp(30px, 4.8vw, 52px); letter-spacing: -.035em; line-height: 1.08; max-width: 20ch; text-wrap: balance; font-weight: 700; }
+  .sub { text-align: center; color: var(--muted); max-width: 52ch; margin: 14px auto 0; }
+
+  .shell { margin-top: 40px; padding: 18px; border: 1px solid var(--line); border-radius: 34px; background: rgba(255,255,255,.025); }
+  .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .card { position: relative; padding: 26px; border: 1px solid var(--line); border-radius: 24px; background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.015)); min-height: 230px; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; transition: .3s; }
+  .card:hover { border-color: rgba(255,255,255,.28); transform: translateY(-3px); }
+  .chipm { position: absolute; top: 22px; left: 26px; display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; color: var(--muted); }
+  .chipm i { width: 8px; height: 8px; border-radius: 50%; background: #7ef0c4; box-shadow: 0 0 10px #7ef0c4; }
+  .card h3 { margin: 0 0 8px; font-size: 24px; letter-spacing: -.02em; font-weight: 700; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; text-wrap: pretty; }
+
+  .friends { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .friend { display: flex; align-items: center; gap: 18px; padding: 24px; border: 1px solid var(--line); border-radius: 24px; background: var(--glass); }
+  .av { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 26px; border: 1px solid rgba(255,255,255,.25); background: radial-gradient(circle at 30% 25%, #2a2d36, #0d0e12); flex: none; }
+  .friend b { font-size: 22px; letter-spacing: -.02em; display: block; }
+  .friend span { color: var(--muted); font-size: 14px; }
+
+  .contacts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .contact { display: flex; align-items: center; gap: 16px; padding: 22px 24px; border: 1px solid var(--line); border-radius: 24px; background: var(--glass); transition: .25s; min-width: 0; }
+  .contact:hover { background: var(--glass-hi); transform: translateY(-2px); border-color: rgba(255,255,255,.3); }
+  .contact svg { width: 28px; height: 28px; flex: none; }
+  .contact div { flex: 1; min-width: 0; }
+  .contact b { display: block; font-size: 20px; letter-spacing: -.01em; overflow-wrap: anywhere; }
+  .contact small { color: var(--muted); font-size: 13.5px; }
+  .contact i { font-style: normal; color: var(--muted); font-size: 20px; }
+
+  footer { margin-top: 110px; padding: 34px 0 48px; border-top: 1px solid var(--line); text-align: center; color: var(--muted); font-size: 13px; }
+
+  .rise { animation: rise .9s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } }
+  @media (max-width: 860px) {
+    .links { display: none; }
+    .grid3, .friends, .contacts { grid-template-columns: minmax(0, 1fr); }
+    .card { min-height: 190px; }
+    section { padding-top: 80px; }
+    .nav .btn { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .emblem, .rise { animation: none; } html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<canvas id="stars" aria-hidden="true"></canvas>
+<div class="wrap">
+  <header class="nav rise">
+    <a class="brand" href="#home" aria-label="Timur">
+      <svg viewBox="0 0 100 100" fill="none" aria-hidden="true"><path d="M50 6 61 36l33 2-26 20 9 32-27-18-27 18 9-32L6 38l33-2L50 6Z" fill="#fff"/><path d="M38 38h24M50 38v28" stroke="#050608" stroke-width="7" stroke-linecap="round"/></svg>
+      Timur
+    </a>
+    <nav class="links" aria-label="Main">
+      <a href="#home" data-i="nHome">Home</a><a href="#about" data-i="nAbout">About</a><a href="#friends" data-i="nFriends">Friends</a><a href="#contact" data-i="nContact">Contact</a>
+    </nav>
+    <div class="right">
+      <div class="lang" role="group" aria-label="Language"><button type="button" data-lang="ru" aria-pressed="false">RU</button><button type="button" data-lang="en" aria-pressed="true">EN</button></div>
+      <a class="btn solid" href="https://t.me/swift_sleepy" target="_blank" rel="noopener">Telegram</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero" id="home">
+      <svg class="emblem rise" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+        <path d="M50 4 62 35l34 2-27 21 10 33-29-19-29 19 10-33L4 37l34-2L50 4Z" fill="#fff"/>
+        <path d="M36 36h28M50 36v30" stroke="#050608" stroke-width="7.5" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="46" stroke="rgba(255,255,255,.22)" stroke-width=".6"/>
+      </svg>
+      <div class="rule"></div>
+      <h1 class="rise">Timur</h1>
+      <p class="tag rise" data-i="tag">Walks, games and good friends.</p>
+      <p class="lead rise" data-i="lead">Hi, I'm Timur. I like going out for walks, playing games on my laptop and spending time with my friends.</p>
+      <div class="cta rise">
+        <a class="btn solid" href="https://t.me/swift_sleepy" target="_blank" rel="noopener">Telegram</a>
+        <a class="btn" href="https://www.tiktok.com/@swift.blood" target="_blank" rel="noopener">TikTok</a>
+      </div>
+    </div>
+
+    <section id="about">
+      <div class="eyebrow" data-i="aEye">About me</div>
+      <h2 data-i="aTitle">What I'm into</h2>
+      <p class="sub" data-i="aSub">Three things that fill most of my free time.</p>
+      <div class="shell"><div class="grid3">
+        <article class="card"><span class="chipm"><i></i><span data-i="c1k">OUTSIDE</span></span><h3 data-i="c1t">Walks</h3><p data-i="c1p">I love getting out and walking around, especially with friends.</p></article>
+        <article class="card"><span class="chipm"><i></i><span data-i="c2k">LAPTOP</span></span><h3 data-i="c2t">Gaming</h3><p data-i="c2p">Playing games on my laptop is how I relax after the day.</p></article>
+        <article class="card"><span class="chipm"><i></i><span data-i="c3k">PEOPLE</span></span><h3 data-i="c3t">Friends</h3><p data-i="c3p">My best time is with the people I hang out with every day.</p></article>
+      </div></div>
+    </section>
+
+    <section id="friends">
+      <div class="eyebrow" data-i="fEye">My people</div>
+      <h2 data-i="fTitle">Friends</h2>
+      <p class="sub" data-i="fSub">The ones I'm with most of the time.</p>
+      <div class="shell"><div class="friends">
+        <div class="friend"><div class="av">R</div><div><b>Rostik</b><span data-i="fr">Friend</span></div></div>
+        <div class="friend"><div class="av">G</div><div><b>Grisha</b><span data-i="fr2">Friend</span></div></div>
+      </div></div>
+    </section>
+
+    <section id="contact">
+      <div class="eyebrow" data-i="kEye">Contact</div>
+      <h2 data-i="kTitle">Find me online</h2>
+      <p class="sub" data-i="kSub">Write to me or follow along.</p>
+      <div class="shell"><div class="contacts">
+        <a class="contact" href="https://t.me/swift_sleepy" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.5 3.4 2.8 10.6c-.9.4-.9 1.1.1 1.4l4.8 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.3-2.3 4.6 3.4c.8.5 1.5.2 1.7-.8l3-14.4c.3-1.200-.4-1.800-1.400-1.400ZM8.500 13.200l9.800-6.200c.5-.3.9-.1.5.2L10.700 14l-.3 3.700-1.900-4.500Z"/></svg>
+          <div><b>@swift_sleepy</b><small>Telegram</small></div><i aria-hidden="true">↗</i></a>
+        <a class="contact" href="https://www.tiktok.com/@swift.blood" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 2h-3.2v13.2a2.8 2.8 0 1 1-2.8-2.8c.3 0 .6 0 .8.1V9.3a6 6 0 1 0 5.2 5.9V8.6a7.4 7.4 0 0 0 4.3 1.4V6.8A4.3 4.3 0 0 1 16.6 2Z"/></svg>
+          <div><b>@swift.blood</b><small>TikTok</small></div><i aria-hidden="true">↗</i></a>
+      </div></div>
+    </section>
+  </main>
+
+  <footer data-i="foot">© 2026 Timur · Made by a friend</footer>
+</div>
+
+<script>
+(function () {
+  var T = {
+    en: { nHome:"Home", nAbout:"About", nFriends:"Friends", nContact:"Contact",
+      tag:"Walks, games and good friends.", lead:"Hi, I'm Timur. I like going out for walks, playing games on my laptop and spending time with my friends.",
+      aEye:"About me", aTitle:"What I'm into", aSub:"Three things that fill most of my free time.",
+      c1k:"OUTSIDE", c1t:"Walks", c1p:"I love getting out and walking around, especially with friends.",
+      c2k:"LAPTOP", c2t:"Gaming", c2p:"Playing games on my laptop is how I relax after the day.",
+      c3k:"PEOPLE", c3t:"Friends", c3p:"My best time is with the people I hang out with every day.",
+      fEye:"My people", fTitle:"Friends", fSub:"The ones I'm with most of the time.", fr:"Friend", fr2:"Friend",
+      kEye:"Contact", kTitle:"Find me online", kSub:"Write to me or follow along.", foot:"© 2026 Timur · Made by a friend" },
+    ru: { nHome:"Главная", nAbout:"Обо мне", nFriends:"Друзья", nContact:"Контакты",
+      tag:"Прогулки, игры и хорошие друзья.", lead:"Привет, я Тимур. Люблю гулять, играть на ноутбуке и проводить время с друзьями.",
+      aEye:"Обо мне", aTitle:"Чем я увлекаюсь", aSub:"Три вещи, на которые уходит почти всё моё свободное время.",
+      c1k:"НА УЛИЦЕ", c1t:"Прогулки", c1p:"Люблю выбираться на улицу и гулять, особенно с друзьями.",
+      c2k:"НОУТБУК", c2t:"Игры", c2p:"Игры на ноутбуке — мой способ отдохнуть после дня.",
+      c3k:"ЛЮДИ", c3t:"Друзья", c3p:"Лучшее время — с теми, с кем я гуляю каждый день.",
+      fEye:"Мои люди", fTitle:"Друзья", fSub:"Те, с кем я больше всего времени.", fr:"Друг", fr2:"Друг",
+      kEye:"Контакты", kTitle:"Я в сети", kSub:"Пиши мне или подписывайся.", foot:"© 2026 Тимур · Сделано другом" }
+  };
+  var lang = 'en';
+  try { var s = localStorage.getItem('tl'); if (s === 'ru' || s === 'en') lang = s; } catch (e) {}
+  function apply(l) {
+    lang = l; document.documentElement.lang = l;
+    document.querySelectorAll('[data-i]').forEach(function (el) { var v = T[l][el.dataset.i]; if (v) el.textContent = v; });
+    document.querySelectorAll('.lang button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.lang === l ? 'true' : 'false'); });
+    document.querySelector('h1').textContent = l === 'ru' ? 'Тимур' : 'Timur';
+    try { localStorage.setItem('tl', l); } catch (e) {}
+  }
+  document.querySelectorAll('.lang button').forEach(function (b) { b.addEventListener('click', function () { apply(b.dataset.lang); }); });
+  apply(lang);
+
+  /* starfield */
+  var cv = document.getElementById('stars'), cx = cv.getContext('2d'), W, H, S = [], dpr, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function size() {
+    dpr = Math.min(devicePixelRatio || 1, 2); W = cv.width = innerWidth * dpr; H = cv.height = innerHeight * dpr;
+    S = []; for (var i = 0; i < 140; i++) S.push({ x: Math.random() * W, y: Math.random() * H, r: (Math.random() * 1.6 + .4) * dpr, p: Math.random() * 6.3, v: Math.random() * .12 + .02 });
+  }
+  function draw(t) {
+    cx.clearRect(0, 0, W, H);
+    cx.strokeStyle = 'rgba(255,255,255,.05)'; cx.lineWidth = dpr;
+    cx.beginPath(); cx.arc(W * .02, H * .45, Math.min(W, H) * .42, 0, 6.3); cx.stroke();
+    cx.beginPath(); cx.arc(W * .99, H * .4, Math.min(W, H) * .36, 0, 6.3); cx.stroke();
+    S.forEach(function (s) {
+      var a = .25 + .55 * (Math.sin(t / 1400 + s.p) * .5 + .5);
+      cx.fillStyle = 'rgba(255,255,255,' + a.toFixed(2) + ')';
+      cx.beginPath(); cx.arc(s.x, s.y, s.r, 0, 6.3); cx.fill();
+      if (!reduce) { s.y -= s.v * dpr; if (s.y < -4) { s.y = H + 4; s.x = Math.random() * W; } }
+    });
+    if (!reduce) requestAnimationFrame(draw);
+  }
+  size(); requestAnimationFrame(draw); addEventListener('resize', size);
+})();
+</script>
+</body>
+</html>
